@@ -102,7 +102,119 @@ db.friends.insert(doc);
 //La colección friends ha sido creada y tiene su primer documento
 </code></pre>
 				</section>
+				<section>
+					<h2>Manipular Documentos</h2>
+					<p>Un documento es a MongoDB como un registro es a MySQL</p>
+					<blockquote>
+						Los documentos son objetos de javascript y se usa JSON para su notaci&oacute;n internamente su estructura es BSON
+					</blockquote>
+					<p>Con los documentos se pueden realizar las operaciones b&aacute;sicas CRUD o IFUR ;)</p>
+					<pre><code data-trim >db.collection.insert()
+db.collection.find()
+db.collection.update()
+db.collection.remove()</code></pre>
+				</section>
+				<section>
+					<h2>Insert</h2>
+					<pre><code>
+// Tenemos el siguiente documento
+var student = { 
+	code: 'S001',
+	name: 'Ramiro', 
+	lastname: 'Gomes', 
+	courses: [ 
+		{ code: 'C001', name: 'Calculus' },
+		{ code: 'D001', name: 'DataBases' } 
+	]
+};
+// Insertamos el objeto JS a la coleccion
+db.students.insert(student);
+					</code></pre>
+				</section>
+				<section>
+					<h2>Find</h2>
+					<pre><code>
+// En la coleccion students deseamos buscar
+// los alumnos que ven C&aacute;lculo
+db.students.find({ 'courses.name': 'Calculus' });
 
+// El retorno es un poco dif&iacute;cil de leer
+// lo embellecemos con .pretty();
+db.students.find({ 'courses.name': 'Calculus' }).pretty();
+
+// O podemos buscar por c&oacute;digo
+db.students.find({ code: 'S001' });
+					</code></pre>
+				</section>
+				<section>
+					<h2>Update</h2>
+					<pre><code>
+// La modificacion tiene dos partes, la consulta y los nuevos valores
+db.students.update(
+	{ code: 'S001' } //La consulta, en este caso el estudiante S001
+	{ $set: { age: 20, lastname: 'Gomez' } } // Los nuevos valores
+);
+					</code></pre>
+					<p>
+						Algunas opciones del m&eacute;todo son:
+					</p>
+					<ul>
+						<li>upsert: Busca y si no encuentra hace un insert de lo contrario actualiza</li>
+						<li>multi: Activa la posiblidad de que actualice varios documentos a la vez</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Update con arrays</h2>
+					<pre><code>
+// Ramiro va a matricular un nuevo curso
+db.students.update(
+	{ code: 'S001' },
+	{ 
+		$push: {
+			courses: { code: 'A001', name: 'Algorithmia' },
+		}  
+	}
+);
+					</code></pre>
+					<p>Y para agregar varios a la vez con el modificador $each</p>
+					<pre><code>
+// Ramiro va a matricular un nuevo curso
+db.students.update(
+	{ code: 'S001' },
+	{ 
+		$push: {
+			courses: {
+				$each: [ { code: 'A002', name: 'Algebra' }, { code: 'A003', name: 'Artificial Intelligence' } ]
+			}
+		}  
+	}
+);
+					</code></pre>
+				</section>
+				<section>
+					<h2>Remove</h2>
+					<pre><code>
+// Bye bye Ramiro
+db.students.remove({ code: 'S001' });
+
+// Para que solo elimine el primero que coincida se
+// llama el m&eacute;todo con justOne en true
+db.students.remove({ code: 'S001' }, true);
+					</code></pre>
+				</section>
+				<section>
+					<h1>Preguntas??</h1>
+				</section>
+				<section>
+					<h1>MUG Cali Colombia</h1>
+					<h3>Haz parte de la comunidad</h3>
+					<ul>
+						<li><a target="_blank" href="http://www.mongodbcali.com">mongodbcali.com</a></li>
+						<li><a target="_blank" href="http://www.meetup.com/Cali-MongoDB-User-Group">Meetup</a></li>
+						<li><a target="_blank" href="https://google.com/+MongoDBCaliColombia/">+MongoDBCAliColombia</a></li>
+						<li><a target="_blank" href="https://twitter.com/MUGCaliCo">@MUGCaliCo</a></li>
+					</ul>
+				</section>
 			</div>
 
 		</div>
